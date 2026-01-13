@@ -1,0 +1,52 @@
+┌──────────────────────┐
+│        USER          │
+│  speaks short input  │
+└─────────┬────────────┘
+          │
+          ▼
+┌──────────────────────┐
+│   MICROPHONE INPUT   │
+│  - Phone + mini mic  │
+│  - Browser mic (web) │
+└─────────┬────────────┘
+          │
+          ▼
+┌──────────────────────┐
+│   SPEECH → TEXT      │
+│  Short, constrained  │
+│  transcription       │
+└─────────┬────────────┘
+          │
+          ▼
+┌──────────────────────┐
+│  PROMPT STRUCTURER   │
+│  - Anchor            │
+│  - Feeling           │
+│  - Detail            │
+│  (single-shot)       │
+└─────────┬────────────┘
+          │
+          ▼
+┌──────────────────────┐
+│  TEXT GENERATION     │
+│  - 2–3 sentences     │
+│  - calm, appreciative│
+│  - no editing        │
+└─────────┬────────────┘
+          │
+          ▼
+┌──────────────────────┐
+│  FORMAT + LAYOUT     │
+│  - line width limit  │
+│  - Unicode border    │
+│  - printer-safe      │
+└─────────┬────────────┘
+          │
+          ▼
+┌──────────────────────┐
+│  OUTPUT              │
+│  IRL: Thermal print  │
+│  Web: Digital view   │
+│  (final artifact)    │
+└──────────────────────┘
+
