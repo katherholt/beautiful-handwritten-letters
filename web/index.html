@@ -225,6 +225,34 @@
             opacity: 1;
         }
 
+        .footer-links {
+            margin-top: 24px;
+            text-align: center;
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+        }
+
+        .footer-links.visible {
+            opacity: 1;
+        }
+
+        .footer-links a {
+            color: #9a7a70;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #c48b7a;
+        }
+
+        .footer-links .separator {
+            color: #9a7a70;
+            margin: 0 12px;
+        }
+
         @media (max-width: 700px) {
             .screen {
                 width: 100%;
@@ -260,6 +288,11 @@
             </div>
             <div class="letter-content" id="letter"></div>
             <button class="print-button" id="printBtn">print</button>
+            <div class="footer-links" id="footerLinks">
+                <a href="https://www.youtube.com/watch?v=p_h0VjK3Stc" target="_blank">watch the scene</a>
+                <span class="separator">|</span>
+                <a href="https://docs.google.com/document/d/1pcdkyLJoX1BCvKFMk0fULgOfTQv4k9FHdWGngRSRWzk/edit?usp=sharing" target="_blank">see project planning</a>
+            </div>
         </div>
     </div>
 
@@ -280,6 +313,7 @@ Loretta`;
 
         const letterElement = document.getElementById('letter');
         const printBtn = document.getElementById('printBtn');
+        const footerLinks = document.getElementById('footerLinks');
         let index = 0;
 
         function typeWriter() {
@@ -318,6 +352,9 @@ Loretta`;
 
                 setTimeout(() => {
                     printBtn.classList.add('visible');
+                    setTimeout(() => {
+                        footerLinks.classList.add('visible');
+                    }, 600);
                 }, 500);
             }
         }
