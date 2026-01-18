@@ -225,8 +225,22 @@
             opacity: 1;
         }
 
+        .coming-soon {
+            margin-top: 20px;
+            text-align: center;
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
+            color: #9a7a70;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+        }
+
+        .coming-soon.visible {
+            opacity: 1;
+        }
+
         .footer-links {
-            margin-top: 24px;
+            margin-top: 16px;
             text-align: center;
             font-family: 'Inter', sans-serif;
             font-size: 12px;
@@ -288,6 +302,9 @@
             </div>
             <div class="letter-content" id="letter"></div>
             <button class="print-button" id="printBtn">print</button>
+            <div class="coming-soon" id="comingSoon">
+                full experience coming February 2025
+            </div>
             <div class="footer-links" id="footerLinks">
                 <a href="https://www.youtube.com/watch?v=p_h0VjK3Stc" target="_blank">watch the scene</a>
                 <span class="separator">|</span>
@@ -297,7 +314,8 @@
     </div>
 
     <script>
-        const letterText = `To my Chris,
+        // Split the letter into initial part (shown immediately) and final paragraph (typed out)
+        const initialText = `To my Chris,
 
 I've been thinking about how I could possibly tell you how much you mean to me.
 
@@ -307,26 +325,29 @@ I was just living my life like I knew everything. Suddenly, this bright light hi
 
 I can't believe it's already been 50 years since you married me. I'm still, to this day, every day, you make me feel like the girl I was when you first turned on the lights and woke me up and we started this adventure together.
 
-Happy anniversary, my love. My friend till the end,
+`;
+
+        const finalParagraph = `Happy anniversary, my love. My friend till the end,
 
 Loretta`;
 
         const letterElement = document.getElementById('letter');
         const printBtn = document.getElementById('printBtn');
+        const comingSoon = document.getElementById('comingSoon');
         const footerLinks = document.getElementById('footerLinks');
         let index = 0;
 
         function typeWriter() {
-            if (index < letterText.length) {
-                letterElement.classList.add('typing');
-                letterElement.textContent = letterText.substring(0, index + 1);
+            if (index < finalParagraph.length) {
+                const currentText = initialText + finalParagraph.substring(0, index + 1);
+                letterElement.textContent = currentText;
 
                 const cursor = document.createElement('span');
                 cursor.className = 'cursor';
                 letterElement.appendChild(cursor);
 
-                const char = letterText[index];
-                const nextChar = letterText[index + 1];
+                const char = finalParagraph[index];
+                const nextChar = finalParagraph[index + 1];
                 index++;
 
                 // Natural handwriting rhythm
@@ -353,13 +374,21 @@ Loretta`;
                 setTimeout(() => {
                     printBtn.classList.add('visible');
                     setTimeout(() => {
-                        footerLinks.classList.add('visible');
-                    }, 600);
+                        comingSoon.classList.add('visible');
+                        setTimeout(() => {
+                            footerLinks.classList.add('visible');
+                        }, 400);
+                    }, 400);
                 }, 500);
             }
         }
 
-        setTimeout(typeWriter, 1000);
+        // Show initial text immediately and start typing the final paragraph
+        setTimeout(() => {
+            letterElement.classList.add('typing');
+            letterElement.textContent = initialText;
+            setTimeout(typeWriter, 300);
+        }, 500);
 
         printBtn.addEventListener('click', () => {
             window.print();
