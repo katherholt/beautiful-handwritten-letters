@@ -35,6 +35,7 @@
                 radial-gradient(ellipse at 50% 80%, rgba(250, 220, 190, 0.2) 0%, transparent 50%),
                 linear-gradient(to bottom, #fdf5ef 0%, #f8e8dc 100%);
             pointer-events: none;
+            animation: blurToFocus 1.2s ease-out forwards;
         }
 
         .desk {
@@ -49,8 +50,10 @@
                 #e8d5c4 4%,
                 #dcc5b0 100%);
             box-shadow:
-                0 -2px 20px rgba(200, 150, 120, 0.2),
-                inset 0 2px 4px rgba(255, 240, 220, 0.3);
+                0 -2px 20px rgba(0, 0, 0, 0.5),
+                inset 0 2px 4px rgba(255, 180, 160, 0.05);
+            animation: blurToFocus 1.2s ease-out 0.1s forwards;
+            opacity: 0;
         }
 
         .desk::before {
@@ -86,10 +89,12 @@
             color: #5a4a42;
             border-radius: 4px;
             box-shadow:
-                0 0 0 1px rgba(240, 200, 180, 0.3),
-                0 0 60px rgba(255, 210, 180, 0.4),
-                0 0 120px rgba(255, 190, 150, 0.3),
-                0 20px 60px rgba(200, 150, 120, 0.25);
+                0 0 0 1px rgba(255, 180, 170, 0.15),
+                0 0 60px rgba(255, 170, 150, 0.35),
+                0 0 120px rgba(230, 120, 110, 0.2),
+                0 20px 60px rgba(0, 0, 0, 0.4);
+            animation: blurToFocus 1.4s ease-out 0.2s forwards;
+            opacity: 0;
         }
 
         .screen::before {
@@ -118,6 +123,8 @@
                 transparent 70%);
             pointer-events: none;
             z-index: -1;
+            animation: blurToFocus 1.4s ease-out 0.2s forwards;
+            opacity: 0;
         }
 
         .letterhead {
@@ -130,6 +137,8 @@
             align-items: center;
             justify-content: center;
             gap: 16px;
+            animation: blurToFocus 1.2s ease-out 0.4s forwards;
+            opacity: 0;
         }
 
         .letterhead-flourish {
@@ -156,7 +165,9 @@
             color: #9a7a70;
             letter-spacing: 0.8px;
             text-transform: uppercase;
-            max-width: 90%;
+            white-space: nowrap;
+            animation: blurToFocus 1.2s ease-out 0.5s forwards;
+            opacity: 0;
         }
 
         .letter-content {
@@ -167,10 +178,7 @@
             opacity: 0;
             margin-top: 10px;
             color: #4a3535;
-        }
-
-        .letter-content.typing {
-            opacity: 1;
+            animation: blurToFocus 1.2s ease-out 0.6s forwards;
         }
 
         .cursor {
@@ -189,6 +197,17 @@
             100% { opacity: 1; }
         }
 
+        @keyframes blurToFocus {
+            0% {
+                filter: blur(12px);
+                opacity: 0;
+            }
+            100% {
+                filter: blur(0);
+                opacity: 1;
+            }
+        }
+
         .print-button {
             margin-top: 40px;
             width: 80%;
@@ -205,6 +224,7 @@
             text-transform: lowercase;
             cursor: pointer;
             opacity: 0;
+            filter: blur(0);
             transition: all 0.4s ease;
             box-shadow:
                 0 2px 8px rgba(0, 0, 0, 0.2),
@@ -221,20 +241,34 @@
         }
 
         .print-button.visible {
-            opacity: 1;
+            animation: blurToFocus 0.8s ease-out forwards;
+        }
+
+        .coming-soon {
+            margin-top: 20px;
+            text-align: center;
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
+            color: #9a7a70;
+            opacity: 0;
+            filter: blur(0);
+        }
+
+        .coming-soon.visible {
+            animation: blurToFocus 0.8s ease-out forwards;
         }
 
         .footer-links {
-            margin-top: 24px;
+            margin-top: 16px;
             text-align: center;
             font-family: 'Inter', sans-serif;
             font-size: 12px;
             opacity: 0;
-            transition: opacity 0.8s ease;
+            filter: blur(0);
         }
 
         .footer-links.visible {
-            opacity: 1;
+            animation: blurToFocus 0.8s ease-out forwards;
         }
 
         .footer-links a {
@@ -345,6 +379,9 @@
             </div>
             <div class="letter-content" id="letter"></div>
             <button class="print-button" id="printBtn">print</button>
+            <div class="coming-soon" id="comingSoon">
+                full experience coming February 2025
+            </div>
             <div class="footer-links" id="footerLinks">
                 <a href="https://www.youtube.com/watch?v=p_h0VjK3Stc" target="_blank">watch the scene</a>
                 <span class="separator">|</span>
@@ -354,7 +391,8 @@
     </div>
 
     <script>
-        const letterText = `To my Chris,
+        // Split the letter into initial part (shown immediately) and final paragraph (typed out)
+        const initialText = `To my Chris,
 
 I've been thinking about how I could possibly tell you how much you mean to me.
 
@@ -362,7 +400,9 @@ I remember how I started to fall in love with you like it was last night. Lying 
 
 I was just living my life like I knew everything. Suddenly, this bright light hit me and woke me up. And that light was you.
 
-I can't believe it's already been 50 years since you married me. I'm still, to this day, every day, you make me feel like the girl I was when you first turned on the lights and woke me up and we started this adventure together.
+`;
+
+        const finalParagraph = `I can't believe it's already been 50 years since you married me. I'm still, to this day, every day, you make me feel like the girl I was when you first turned on the lights and woke me up and we started this adventure together.
 
 Happy anniversary, my love. My friend till the end,
 
@@ -370,20 +410,21 @@ Loretta`;
 
         const letterElement = document.getElementById('letter');
         const printBtn = document.getElementById('printBtn');
+        const comingSoon = document.getElementById('comingSoon');
         const footerLinks = document.getElementById('footerLinks');
         let index = 0;
 
         function typeWriter() {
-            if (index < letterText.length) {
-                letterElement.classList.add('typing');
-                letterElement.textContent = letterText.substring(0, index + 1);
+            if (index < finalParagraph.length) {
+                const currentText = initialText + finalParagraph.substring(0, index + 1);
+                letterElement.textContent = currentText;
 
                 const cursor = document.createElement('span');
                 cursor.className = 'cursor';
                 letterElement.appendChild(cursor);
 
-                const char = letterText[index];
-                const nextChar = letterText[index + 1];
+                const char = finalParagraph[index];
+                const nextChar = finalParagraph[index + 1];
                 index++;
 
                 // Natural handwriting rhythm
@@ -410,13 +451,20 @@ Loretta`;
                 setTimeout(() => {
                     printBtn.classList.add('visible');
                     setTimeout(() => {
-                        footerLinks.classList.add('visible');
-                    }, 600);
+                        comingSoon.classList.add('visible');
+                        setTimeout(() => {
+                            footerLinks.classList.add('visible');
+                        }, 400);
+                    }, 400);
                 }, 500);
             }
         }
 
-        setTimeout(typeWriter, 1000);
+        // Show initial text immediately and start typing the final paragraph
+        setTimeout(() => {
+            letterElement.textContent = initialText;
+            setTimeout(typeWriter, 300);
+        }, 800);
 
         printBtn.addEventListener('click', () => {
             window.print();
