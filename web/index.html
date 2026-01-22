@@ -288,19 +288,39 @@
         }
 
         @media (max-width: 700px) {
+            body {
+                padding: 40px 10%;
+            }
+
             .screen {
                 width: 100%;
                 max-width: 600px;
                 min-height: 600px;
-                padding: 70px 40px 50px 40px;
+                padding: 70px 30px 50px 30px;
+            }
+
+            .letterhead {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .letterhead-flourish {
+                display: none;
             }
 
             .letterhead-title {
                 font-size: 24px;
             }
 
+            .letterhead-contact {
+                top: 60px;
+                font-size: 7px;
+                padding: 0 10px;
+            }
+
             .letter-content {
                 font-size: 20px;
+                margin-top: 20px;
             }
         }
     </style>
